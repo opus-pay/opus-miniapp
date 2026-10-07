@@ -30,6 +30,12 @@ export type MiniAppShellProps = {
     /** The Portal's address; defaults to the public Portal. */
     portalUrl?: string;
     wallet: WalletState;
+    /**
+     * Replaces the standard wallet pill with the app's own control (for example a menu with sign-in). The
+     * `wallet` state is still used for the wrong-network bar, so the control must show the address the same way
+     * (checksum spelling, first 6 and last 4 characters).
+     */
+    walletSlot?: ReactNode;
     /** Switches the wallet's network for the wrong-network bar; without it the bar only warns. */
     onSwitchChain?: (target: SwitchTarget) => Promise<boolean>;
     /** The app's pages: a menu in the header on a PC, a tab bar at the bottom on a phone. */
@@ -59,6 +65,7 @@ export function MiniAppShell({
     onLocaleChange,
     portalUrl,
     wallet,
+    walletSlot,
     onSwitchChain,
     nav = [],
     headerRight,
@@ -101,7 +108,7 @@ export function MiniAppShell({
                         </>
                     )}
                     {headerRight}
-                    <WalletPill wallet={wallet} locale={locale} />
+                    {walletSlot ?? <WalletPill wallet={wallet} locale={locale} />}
                 </div>
             </header>
             <main

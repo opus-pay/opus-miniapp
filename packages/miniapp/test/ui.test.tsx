@@ -110,4 +110,19 @@ describe("mini-app shell", () => {
         // no menu, no tab bar
         expect(shell()).to.not.contain("fixed inset-x-0 bottom-0");
     });
+    it("lets an app replace the wallet pill with its own control", () => {
+        const html = renderToStaticMarkup(
+            <MiniAppShell
+                app={{ name: "Demo" }}
+                locale="en"
+                onLocaleChange={noop}
+                wallet={wallet}
+                walletSlot={<button>my wallet menu</button>}
+            >
+                <p>the page</p>
+            </MiniAppShell>
+        );
+        expect(html).to.contain("my wallet menu");
+        expect(html).to.not.contain("Connect wallet");
+    });
 });
