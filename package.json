@@ -1,0 +1,19 @@
+{
+    "name": "opus-miniapp-workspace",
+    "private": true,
+    "license": "UNLICENSED",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "dev": "yarn workspace @opus/miniapp-demo dev",
+        "build": "yarn workspace @opus/miniapp-demo build",
+        "test": "yarn workspace @opus/miniapp test",
+        "lint": "yarn workspaces run lint",
+        "formatting:check": "yarn workspaces run formatting:check",
+        "formatting:write": "yarn workspaces run formatting:write"
+    },
+    "engines": {
+        "node": ">=22"
+    }
+}

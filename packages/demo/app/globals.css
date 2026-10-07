@@ -1,0 +1,4 @@
+@import "tailwindcss";
+@import "@opus/miniapp/tokens.css";
+/* Tailwind only writes the classes it finds in the files it scans: tell it to scan the kit too. */
+@source "../../miniapp/src";

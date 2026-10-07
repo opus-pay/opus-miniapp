@@ -1,0 +1,97 @@
+import { expect } from "chai";
+
+import {
+    CHAINS,
+    DEFAULT_PORTAL_URL,
+    LOCALES,
+    LOCALE_NAMES,
+    MESSAGES,
+    chainOf,
+    displayAddress,
+    goToPortalInApp,
+    isUnsupportedChain,
+    pickLocale,
+    portalNavMessage,
+    resolvePortalUrl,
+    shortAddress,
+    translate,
+} from "../src/core";
+
+const slots = (text: string) => (text.match(/\{\w+\}/g) ?? []).sort().join(",");
+const CHECKSUM = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+
+describe("addresses", () => {
+    it("shows the checksum spelling, short as first 6 and last 4", () => {
+        expect(displayAddress(CHECKSUM.toLowerCase())).to.equal(CHECKSUM);
+        expect(shortAddress(CHECKSUM.toLowerCase())).to.equal("0xf39F…2266");
+        expect(shortAddress("0x123")).to.equal("0x123");
+        expect(displayAddress("not an address")).to.equal("not an address");
+    });
+});
+
+describe("languages", () => {
+    it("are the four OPUS languages with the names the Portal and WayHand use", () => {
+        expect(LOCALES).to.deep.equal(["en", "ko", "ja", "zh"]);
+        expect(LOCALE_NAMES).to.deep.equal({ en: "English", ko: "한국어", ja: "日本語", zh: "简体中文" });
+    });
+
+    it("picks the first language OPUS has, else English", () => {
+        expect(pickLocale(["fr-FR", "ja-JP"])).to.equal("ja");
+        expect(pickLocale(["zh-Hans-CN"])).to.equal("zh");
+        expect(pickLocale(["de"])).to.equal("en");
+        expect(pickLocale([])).to.equal("en");
+    });
+
+    it("gives every language the same keys and the same {slots}, with no empty text", () => {
+        const keys = Object.keys(MESSAGES.en).sort();
+        for (const locale of LOCALES) {
+            expect(Object.keys(MESSAGES[locale]).sort(), locale).to.deep.equal(keys);
+            for (const key of keys) {
+                const k = key as keyof (typeof MESSAGES)["en"];
+                expect(MESSAGES[locale][k].trim(), `${locale} ${key}`).to.not.equal("");
+                expect(slots(MESSAGES[locale][k]), `${locale} ${key}`).to.equal(slots(MESSAGES.en[k]));
+            }
+        }
+    });
+
+    it("fills slots and leaves unknown ones", () => {
+        expect(translate("en", "network.warn.text", { chainId: 56 })).to.contain("chain ID 56");
+        expect(translate("ko", "network.warn.text")).to.contain("{chainId}");
+    });
+});
+
+describe("the way back to the Portal", () => {
+    it("uses the default Portal unless given an https address (or http on localhost)", () => {
+        expect(resolvePortalUrl(undefined)).to.equal(DEFAULT_PORTAL_URL);
+        expect(resolvePortalUrl("  ")).to.equal(DEFAULT_PORTAL_URL);
+        expect(resolvePortalUrl("https://portal.example.org/")).to.equal("https://portal.example.org/");
+        expect(resolvePortalUrl("http://localhost:3200")).to.equal("http://localhost:3200/");
+    });
+
+    it("never turns a bad setting into a link that runs code or leaves https", () => {
+        for (const bad of ["javascript:alert(1)", "data:text/html,x", "http://evil.example", "ftp://x.org", "nope"]) {
+            expect(resolvePortalUrl(bad), bad).to.equal(DEFAULT_PORTAL_URL);
+        }
+    });
+
+    it("tells the wallet app to show its Portal when the page runs inside it", () => {
+        const sent: string[] = [];
+        expect(goToPortalInApp({ ReactNativeWebView: { postMessage: (m) => sent.push(m) } })).to.equal(true);
+        expect(JSON.parse(sent[0])).to.deep.equal({ channel: "opus-nav", action: "portal" });
+        expect(sent[0]).to.equal(portalNavMessage());
+        // in an ordinary browser there is no bridge, so the link works as a link
+        expect(goToPortalInApp({})).to.equal(false);
+    });
+});
+
+describe("chains", () => {
+    it("knows Polygon and Polygon Amoy, and warns for any other chain", () => {
+        expect(CHAINS.map((c) => c.chainId)).to.deep.equal([137, 80002]);
+        expect(chainOf(137)?.name).to.equal("Polygon");
+        for (const other of [1, 56, 10, 8453, 31337, 80001])
+            expect(isUnsupportedChain(other), String(other)).to.equal(true);
+        expect(isUnsupportedChain(137)).to.equal(false);
+        expect(isUnsupportedChain(80002)).to.equal(false);
+        expect(isUnsupportedChain(undefined)).to.equal(false);
+    });
+});
