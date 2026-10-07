@@ -1,0 +1,26 @@
+name: ci
+
+on:
+    pull_request:
+    push:
+        branches: [main]
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: yarn
+            - run: yarn install --frozen-lockfile
+            - run: yarn formatting:check
+            - run: yarn lint
+            - run: yarn test
+            - name: Build the demo
+              run: yarn build
+            - name: The built page has the way back to the Portal at the top left
+              run: |
+                  test -f packages/demo/out/index.html
+                  grep -q 'href="https://opus-pay.github.io/opus-portal/"' packages/demo/out/index.html

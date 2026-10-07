@@ -1,0 +1,88 @@
+/*
+ * The OPUS design tokens: the palette and fonts every mini-app shares with the Portal. Cool paper, navy ink,
+ * cobalt for actions, emerald for money, amber for warnings. Import after Tailwind v4:
+ *
+ *   @import "tailwindcss";
+ *   @import "@opus/miniapp/tokens.css";
+ *   @source "../node_modules/@opus/miniapp/src";
+ *
+ * The colours then work as Tailwind classes: bg-canvas, bg-surface, border-line, text-ink, text-muted,
+ * bg-accent-fill, text-warn, bg-money-wash and so on.
+ */
+:root {
+    --c-canvas: #edf0f4;
+    --c-surface: #ffffff;
+    --c-sunken: #e3e7ee;
+    --c-line: #d6dce6;
+    --c-ink: #16213a;
+    --c-ink-soft: #3a4560;
+    --c-muted: #5e6a80;
+    --c-accent: #2d55e0;
+    --c-accent-fill: #2d55e0;
+    --c-accent-deep: #2143b8;
+    --c-accent-wash: #eef2fd;
+    --c-money: #0e8a66;
+    --c-money-ink: #0b6e51;
+    --c-money-wash: #e7f5ef;
+    --c-warn: #9a4a07;
+    --c-warn-wash: #fdf3e6;
+    --font-cjk: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR";
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --c-canvas: #0f1522;
+        --c-surface: #182031;
+        --c-sunken: #212a3b;
+        --c-line: #2a3448;
+        --c-ink: #e6eaf2;
+        --c-ink-soft: #bcc5d6;
+        --c-muted: #929db2;
+        --c-accent: #8ea6ff;
+        --c-accent-fill: #3d5fe6;
+        --c-accent-deep: #3352cf;
+        --c-accent-wash: #1c2747;
+        --c-money: #3fc79b;
+        --c-money-ink: #86e0c0;
+        --c-money-wash: #123029;
+        --c-warn: #f0a650;
+        --c-warn-wash: #33240f;
+        color-scheme: dark;
+    }
+}
+
+@theme inline {
+    --color-canvas: var(--c-canvas);
+    --color-surface: var(--c-surface);
+    --color-sunken: var(--c-sunken);
+    --color-line: var(--c-line);
+    --color-ink: var(--c-ink);
+    --color-ink-soft: var(--c-ink-soft);
+    --color-muted: var(--c-muted);
+    --color-accent: var(--c-accent);
+    --color-accent-fill: var(--c-accent-fill);
+    --color-accent-deep: var(--c-accent-deep);
+    --color-accent-wash: var(--c-accent-wash);
+    --color-money: var(--c-money);
+    --color-money-ink: var(--c-money-ink);
+    --color-money-wash: var(--c-money-wash);
+    --color-warn: var(--c-warn);
+    --color-warn-wash: var(--c-warn-wash);
+    --font-sans: var(--font-cjk), ui-sans-serif, system-ui, sans-serif;
+    --font-display: var(--font-grotesk), var(--font-cjk), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* The page itself: the same ground, ink and type as every OPUS screen. */
+body {
+    margin: 0;
+    background: var(--c-canvas);
+    color: var(--c-ink);
+    font-family: var(--font-cjk), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+}
+
+button {
+    cursor: pointer;
+}
