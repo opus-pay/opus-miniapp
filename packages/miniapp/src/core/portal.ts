@@ -1,5 +1,5 @@
 /** Where the OPUS Portal lives, unless a mini-app is told otherwise (its `portalUrl` setting). */
-export const DEFAULT_PORTAL_URL = "https://opus-pay.github.io/opus-portal/";
+export const DEFAULT_PORTAL_URL = "https://www.opusportal.org/";
 
 /**
  * The Portal address a mini-app may link to: an https address (or http on localhost, for development).

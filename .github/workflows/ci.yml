@@ -23,4 +23,4 @@ jobs:
             - name: The built page has the way back to the Portal at the top left
               run: |
                   test -f packages/demo/out/index.html
-                  grep -q 'href="https://opus-pay.github.io/opus-portal/"' packages/demo/out/index.html
+                  grep -q 'href="https://www.opusportal.org/"' packages/demo/out/index.html

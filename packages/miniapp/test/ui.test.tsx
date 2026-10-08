@@ -10,7 +10,7 @@ const ADDRESS = "0xf39fd6e51aad88f6f4ce6ab8827279cffFb92266".toLowerCase();
 describe("portal bar", () => {
     it("links back to the Portal at the left, before the language, with a label in the visitor's language", () => {
         const html = renderToStaticMarkup(<PortalBar locale="ko" onLocaleChange={noop} />);
-        expect(html).to.contain('href="https://opus-pay.github.io/opus-portal/"');
+        expect(html).to.contain('href="https://www.opusportal.org/"');
         expect(html).to.contain('aria-label="OPUS 포털로 돌아가기"');
         // the link comes first (top left), the language select after it (top right)
         expect(html.indexOf("<a ")).to.be.lessThan(html.indexOf("<select"));
