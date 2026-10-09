@@ -1,6 +1,6 @@
 "use client";
 
-import { goToPortalInApp, resolvePortalUrl, translate, type Locale } from "../core";
+import { goToPortalInApp, portalLink, translate, type Locale } from "../core";
 import { LanguageSelect } from "./language-select";
 import { LogoMark } from "./logo";
 
@@ -29,7 +29,7 @@ export function PortalBar({
         <div className="border-b border-line bg-canvas">
             <div className="mx-auto flex max-w-[64rem] items-center gap-2 px-4 py-1.5">
                 <a
-                    href={resolvePortalUrl(portalUrl)}
+                    href={portalLink(portalUrl, locale)}
                     title={title}
                     aria-label={title}
                     {...(newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}

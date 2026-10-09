@@ -20,6 +20,16 @@ export function resolvePortalUrl(url: string | undefined): string {
 }
 
 /**
+ * The Portal address to link to, with `?lang=` for the language the reader uses here, so the Portal opens in it
+ * (the Portal does the same for a mini-app). `path` is added to the address first ("network/").
+ */
+export function portalLink(url: string | undefined, locale: string, path = ""): string {
+    const target = new URL(path, resolvePortalUrl(url));
+    target.searchParams.set("lang", locale);
+    return target.toString();
+}
+
+/**
  * When a mini-app runs inside the OPUS wallet app, the app (not the page) knows where its Portal screen is, so
  * the way back is a message to the app instead of a link. The app answers by showing its home screen.
  */

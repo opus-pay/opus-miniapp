@@ -2,13 +2,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { htmlLang, isLocale, pickLocale, type Locale } from "../core";
+import { htmlLang, initialLocale, isLocale, type Locale } from "../core";
 
 /**
  * The visitor's language for a mini-app, in this order: `?lang=ko` in the address (the Portal passes it when it
- * opens a mini-app, so the language carries over), the language they chose here before, the browser's language,
- * English. A choice is kept in this browser and `<html lang>` follows it. Storage can be refused (a private
- * window); the choice then lasts for the visit.
+ * opens a mini-app, so the language carries over), the language they chose here before, English. The browser's
+ * language is not used. A choice, or a language that came in the address, is kept in this browser and `<html lang>`
+ * follows it. Storage can be refused (a private window); the choice then lasts for the visit.
  */
 export function useLocale(storageKey = "opus.locale"): [Locale, (locale: Locale) => void] {
     const [locale, setState] = useState<Locale>("en");
@@ -21,13 +21,14 @@ export function useLocale(storageKey = "opus.locale"): [Locale, (locale: Locale)
         } catch {
             // no storage
         }
-        setState(
-            isLocale(fromUrl)
-                ? fromUrl
-                : isLocale(saved)
-                ? saved
-                : pickLocale(navigator.languages ?? [navigator.language])
-        );
+        setState(initialLocale(fromUrl, saved));
+        if (isLocale(fromUrl)) {
+            try {
+                window.localStorage.setItem(storageKey, fromUrl);
+            } catch {
+                // the language still holds for this visit
+            }
+        }
     }, [storageKey]);
     useEffect(() => {
         document.documentElement.lang = htmlLang(locale);

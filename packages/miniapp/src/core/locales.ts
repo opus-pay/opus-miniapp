@@ -20,5 +20,14 @@ export function pickLocale(languages: readonly string[]): Locale {
     return "en";
 }
 
+/**
+ * The language to start in: `?lang=` in the address, else the one chosen last time, else English. The browser's own
+ * language is not used.
+ */
+export function initialLocale(fromUrl: string | null | undefined, saved: string | null | undefined): Locale {
+    if (isLocale(fromUrl)) return fromUrl;
+    return isLocale(saved) ? saved : "en";
+}
+
 /** The value for `<html lang>`. */
 export const htmlLang = (locale: Locale): string => (locale === "zh" ? "zh-Hans" : locale);
