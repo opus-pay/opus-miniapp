@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { isUnsupportedChain, resolvePortalUrl, translate, type Locale } from "../core";
+import { isUnsupportedChain, portalLink, translate, type Locale } from "../core";
 
 export type SwitchTarget = "polygon" | "amoy";
 
@@ -62,7 +62,7 @@ export function NetworkWarning({
                         >
                             {t("network.warn.amoy")}
                         </button>
-                        <a href={`${resolvePortalUrl(portalUrl)}network/`} className="text-[13.5px] font-semibold">
+                        <a href={portalLink(portalUrl, locale, "network/")} className="text-[13.5px] font-semibold">
                             {t("network.label")} →
                         </a>
                     </div>

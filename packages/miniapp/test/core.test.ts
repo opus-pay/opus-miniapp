@@ -10,7 +10,9 @@ import {
     displayAddress,
     goToPortalInApp,
     isUnsupportedChain,
+    initialLocale,
     pickLocale,
+    portalLink,
     portalNavMessage,
     resolvePortalUrl,
     shortAddress,
@@ -40,6 +42,22 @@ describe("languages", () => {
         expect(pickLocale(["zh-Hans-CN"])).to.equal("zh");
         expect(pickLocale(["de"])).to.equal("en");
         expect(pickLocale([])).to.equal("en");
+    });
+
+    it("starts in the address's language, else the last choice, else English (never the browser's)", () => {
+        expect(initialLocale("ko", "ja")).to.equal("ko");
+        expect(initialLocale(null, "ja")).to.equal("ja");
+        expect(initialLocale(null, null)).to.equal("en");
+        expect(initialLocale("fr", "de")).to.equal("en");
+    });
+
+    it("links back to the Portal in the reader's language", () => {
+        expect(portalLink(undefined, "ko")).to.equal("https://www.opusportal.org/?lang=ko");
+        expect(portalLink("https://portal.example.org/", "ja", "network/")).to.equal(
+            "https://portal.example.org/network/?lang=ja"
+        );
+        // a bad setting still falls back to the default Portal
+        expect(portalLink("javascript:alert(1)", "zh")).to.equal("https://www.opusportal.org/?lang=zh");
     });
 
     it("gives every language the same keys and the same {slots}, with no empty text", () => {
