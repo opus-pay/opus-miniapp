@@ -21,6 +21,14 @@ export function LogoMark({ size = 32 }: { size?: number }) {
 }
 
 /**
+ * With no tagline the name sits alone beside the mark, so its capital letters, not its line box, are what has to be
+ * centred on the mark: a font's line box carries space for descenders and accents that makes the capitals look high or
+ * low. `text-box` trims the box to the capitals and the baseline (Chrome, Edge and Safari; elsewhere the plain line box
+ * is used).
+ */
+const NAME_ALONE = "[text-box:trim-both_cap_alphabetic]";
+
+/**
  * A mini-app's own mark and name for the top bar. `mark` is the app's logo drawing (32 px square); `tagline` is
  * the small line under the name (hidden on a phone). The name may carry markup, e.g. `Way<span>Hand</span>`.
  */
@@ -29,7 +37,13 @@ export function AppLogo({ name, mark, tagline }: { name: ReactNode; mark?: React
         <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
             {mark ?? <LogoMark />}
             <span className="flex min-w-0 flex-col leading-none">
-                <span className="font-display text-[20px] font-bold tracking-tight text-ink">{name}</span>
+                <span
+                    className={`font-display text-[20px] font-bold tracking-tight text-ink ${
+                        tagline === undefined ? NAME_ALONE : ""
+                    }`}
+                >
+                    {name}
+                </span>
                 {tagline !== undefined && (
                     <span className="mt-1 hidden truncate text-[11px] font-medium text-muted sm:block">{tagline}</span>
                 )}
