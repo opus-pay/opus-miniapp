@@ -21,12 +21,42 @@ export function pickLocale(languages: readonly string[]): Locale {
 }
 
 /**
- * The language to start in: `?lang=` in the address, else the one chosen last time, else English. The browser's own
- * language is not used.
+ * The language to start in, in this order: `?lang=` in the address, the one chosen last time (kept in a cookie), the
+ * first language of the browser's own list that OPUS has, English.
  */
-export function initialLocale(fromUrl: string | null | undefined, saved: string | null | undefined): Locale {
+export function initialLocale(
+    fromUrl: string | null | undefined,
+    saved: string | null | undefined,
+    browser: readonly string[] = []
+): Locale {
     if (isLocale(fromUrl)) return fromUrl;
-    return isLocale(saved) ? saved : "en";
+    if (isLocale(saved)) return saved;
+    return pickLocale(browser);
+}
+
+/** The value of a cookie in a `document.cookie` string, or `null`. */
+export function readCookie(cookies: string, name: string): string | null {
+    for (const part of cookies.split(";")) {
+        const at = part.indexOf("=");
+        if (at > 0 && part.slice(0, at).trim() === name) {
+            try {
+                return decodeURIComponent(part.slice(at + 1).trim());
+            } catch {
+                return null;
+            }
+        }
+    }
+    return null;
+}
+
+const YEAR = 365 * 24 * 60 * 60;
+
+/**
+ * The cookie text that remembers a choice for a year on every page of this site: it is a preference, read only by
+ * this browser's own page, never sent anywhere else (`SameSite=Lax`), and `Secure` on https.
+ */
+export function choiceCookie(name: string, value: string, secure: boolean): string {
+    return `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${YEAR}; SameSite=Lax${secure ? "; Secure" : ""}`;
 }
 
 /** The value for `<html lang>`. */

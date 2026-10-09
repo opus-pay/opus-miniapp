@@ -10,10 +10,12 @@ import {
     displayAddress,
     goToPortalInApp,
     isUnsupportedChain,
+    choiceCookie,
     initialLocale,
     pickLocale,
     portalLink,
     portalNavMessage,
+    readCookie,
     resolvePortalUrl,
     shortAddress,
     translate,
@@ -44,11 +46,27 @@ describe("languages", () => {
         expect(pickLocale([])).to.equal("en");
     });
 
-    it("starts in the address's language, else the last choice, else English (never the browser's)", () => {
-        expect(initialLocale("ko", "ja")).to.equal("ko");
-        expect(initialLocale(null, "ja")).to.equal("ja");
+    it("starts in the address's language, else the last choice, else the browser's, else English", () => {
+        expect(initialLocale("ko", "ja", ["zh-CN"])).to.equal("ko");
+        expect(initialLocale(null, "ja", ["zh-CN"])).to.equal("ja");
+        expect(initialLocale(null, null, ["fr-FR", "ko-KR"])).to.equal("ko");
+        expect(initialLocale(null, null, ["zh-TW"])).to.equal("zh");
+        expect(initialLocale(null, null, ["de"])).to.equal("en");
         expect(initialLocale(null, null)).to.equal("en");
+        // a value that is not one of the four is ignored, so the next step decides
+        expect(initialLocale("fr", "de", ["ja"])).to.equal("ja");
         expect(initialLocale("fr", "de")).to.equal("en");
+    });
+
+    it("keeps the chosen language in a cookie that is read back", () => {
+        const text = choiceCookie("opus_locale", "ko", true);
+        expect(text).to.contain("opus_locale=ko").and.to.contain("Path=/").and.to.contain("SameSite=Lax");
+        expect(text).to.contain("Secure").and.to.contain("Max-Age=31536000");
+        expect(choiceCookie("opus_locale", "ko", false)).to.not.contain("Secure");
+        expect(readCookie("a=1; opus_locale=ja; b=2", "opus_locale")).to.equal("ja");
+        expect(readCookie("a=1", "opus_locale")).to.equal(null);
+        expect(readCookie("opus_locale=%E0%A4%A", "opus_locale")).to.equal(null);
+        expect(readCookie("xopus_locale=ja", "opus_locale")).to.equal(null);
     });
 
     it("links back to the Portal in the reader's language", () => {
