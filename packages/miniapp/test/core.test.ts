@@ -2,6 +2,7 @@ import { expect } from "chai";
 
 import {
     CHAINS,
+    addressWithLanguage,
     DEFAULT_PORTAL_URL,
     LOCALES,
     LOCALE_NAMES,
@@ -67,6 +68,17 @@ describe("languages", () => {
         expect(readCookie("a=1", "opus_locale")).to.equal(null);
         expect(readCookie("opus_locale=%E0%A4%A", "opus_locale")).to.equal(null);
         expect(readCookie("xopus_locale=ja", "opus_locale")).to.equal(null);
+    });
+
+    it("puts a language chosen with the control into the address, only when the address has one", () => {
+        expect(addressWithLanguage("https://www.opusportal.org/?lang=ko", "en")).to.equal(
+            "https://www.opusportal.org/?lang=en"
+        );
+        expect(addressWithLanguage("https://x.app/post?a=1&lang=ja#top", "zh")).to.equal(
+            "https://x.app/post?a=1&lang=zh#top"
+        );
+        expect(addressWithLanguage("https://www.opusportal.org/", "en")).to.equal(null);
+        expect(addressWithLanguage("not an address", "en")).to.equal(null);
     });
 
     it("links back to the Portal in the reader's language", () => {

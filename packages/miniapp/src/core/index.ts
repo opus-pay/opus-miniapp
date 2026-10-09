@@ -3,6 +3,7 @@ export { CHAINS, chainOf, isUnsupportedChain, type ChainInfo } from "./networks"
 export {
     LOCALES,
     LOCALE_NAMES,
+    addressWithLanguage,
     choiceCookie,
     htmlLang,
     initialLocale,

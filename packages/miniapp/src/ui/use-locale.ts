@@ -2,13 +2,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { choiceCookie, htmlLang, initialLocale, isLocale, readCookie, type Locale } from "../core";
+import { addressWithLanguage, choiceCookie, htmlLang, initialLocale, isLocale, readCookie, type Locale } from "../core";
 
 /**
  * The visitor's language for a mini-app, in this order: `?lang=ko` in the address (the Portal passes it when it
  * opens a mini-app, so the language carries over), the language they chose here before (a cookie), the browser's own
  * language if OPUS has it, English. A choice, or a language that came in the address, is remembered in a cookie of
- * this site and `<html lang>` follows it. If cookies are refused, the choice lasts for the visit.
+ * this site, `<html lang>` follows it, and an existing `?lang=` in the address is changed to the new choice. If cookies are refused, the choice lasts for the visit.
  */
 export function useLocale(cookieName = "opus_locale"): [Locale, (locale: Locale) => void] {
     const [locale, setState] = useState<Locale>("en");
@@ -22,6 +22,15 @@ export function useLocale(cookieName = "opus_locale"): [Locale, (locale: Locale)
         },
         [cookieName]
     );
+    /** A choice made here also changes `?lang=` in the address when it has one, so a reload does not undo it. */
+    const followInAddress = useCallback((value: Locale) => {
+        try {
+            const next = addressWithLanguage(window.location.href, value);
+            if (next !== null) window.history.replaceState(window.history.state, "", next);
+        } catch {
+            // The address stays as it is.
+        }
+    }, []);
     useEffect(() => {
         let fromUrl: string | null = null;
         let saved: string | null = null;
@@ -43,8 +52,9 @@ export function useLocale(cookieName = "opus_locale"): [Locale, (locale: Locale)
         (next: Locale) => {
             setState(next);
             remember(next);
+            followInAddress(next);
         },
-        [remember]
+        [remember, followInAddress]
     );
     return [locale, set];
 }
