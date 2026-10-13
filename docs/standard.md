@@ -25,12 +25,13 @@
 
 ## WayHand를 이 표준에 맞출 때 바꿀 것
 
-| 지금 WayHand (`src/components/frame.tsx`)           | 키트로                                                            |
-| :-------------------------------------------------- | :---------------------------------------------------------------- |
-| 맨 위 얇은 바: 왼쪽 "OPUS" 버튼(새 탭), 오른쪽 언어 | `PortalBar` (같은 탭, 왼쪽 위 "‹ ◎ OPUS", 앱 안에서는 메시지)     |
-| 헤더: 로고, 메뉴, 알림 종, 도움말, 지갑             | `MiniAppShell`의 `app`, `nav`, `headerRight`(종·도움말), `wallet` |
-| 휴대폰 아래 탭 바                                   | `MiniAppShell`이 자동으로                                         |
-| `wallet.tsx`의 주소·연결 표시                       | `WalletPill`, `AddressText`                                       |
-| 네트워크 경고 없음                                  | `NetworkWarning` (켜짐)                                           |
-| `globals.css`의 색                                  | `@import "@opus/miniapp/tokens.css"`                              |
-| `LOCALE_NAMES`의 중국어                             | 이미 `简体中文`                                                   |
+| 지금 WayHand (`src/components/frame.tsx`)           | 키트로                                                          |
+| :-------------------------------------------------- | :-------------------------------------------------------------- |
+| 맨 위 얇은 바: 왼쪽 "OPUS" 버튼(새 탭), 오른쪽 언어 | `PortalBar` (같은 탭, 왼쪽 위 "‹ ◎ OPUS", 앱 안에서는 메시지)   |
+| 맨 위 얇은 바 오른쪽: 알림 종, 도움말, 언어         | `MiniAppShell`의 `topBarRight`(종·도움말), 언어는 `PortalBar`가 |
+| 헤더: 로고, 메뉴, 잔고, 지갑                        | `MiniAppShell`의 `app`, `nav`, `headerRight`(잔고 등), `wallet` |
+| 휴대폰 아래 탭 바                                   | `MiniAppShell`이 자동으로                                       |
+| `wallet.tsx`의 주소·연결 표시                       | `WalletPill`, `AddressText`                                     |
+| 네트워크 경고 없음                                  | `NetworkWarning` (켜짐)                                         |
+| `globals.css`의 색                                  | `@import "@opus/miniapp/tokens.css"`                            |
+| `LOCALE_NAMES`의 중국어                             | 이미 `简体中文`                                                 |
