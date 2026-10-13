@@ -1,12 +1,15 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { goToPortalInApp, portalLink, translate, type Locale } from "../core";
 import { LanguageSelect } from "./language-select";
 import { LogoMark } from "./logo";
 
 /**
  * The thin bar above every mini-app: the way back to the OPUS Portal at the top left, the language at the top
- * right. It scrolls away with the page; the app's own header below it stays.
+ * right, and between them on the right the app's own small controls (a notification bell, a help menu) when it
+ * gives some. It scrolls away with the page; the app's own header below it stays.
  *
  * In a browser the way back is an ordinary link. Inside the OPUS wallet app it is a message to the app, which
  * shows its Portal screen (the page cannot open that screen itself).
@@ -16,6 +19,7 @@ export function PortalBar({
     onLocaleChange,
     portalUrl,
     newTab = false,
+    right,
 }: {
     locale: Locale;
     onLocaleChange: (locale: Locale) => void;
@@ -23,6 +27,8 @@ export function PortalBar({
     portalUrl?: string;
     /** Open the Portal in a new tab instead of this one. */
     newTab?: boolean;
+    /** The app's own small controls, shown on the right just before the language. */
+    right?: ReactNode;
 }) {
     const title = translate(locale, "portal.title");
     return (
@@ -51,7 +57,8 @@ export function PortalBar({
                     <LogoMark size={18} />
                     {translate(locale, "portal.back")}
                 </a>
-                <span className="ml-auto shrink-0">
+                <span className="ml-auto flex shrink-0 items-center gap-2">
+                    {right}
                     <LanguageSelect locale={locale} onChange={onLocaleChange} />
                 </span>
             </div>

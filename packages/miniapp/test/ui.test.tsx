@@ -32,6 +32,16 @@ describe("portal bar", () => {
         ).to.not.contain("javascript:");
     });
 
+    it("shows the app's own controls on the right, between the Portal link and the language", () => {
+        const html = renderToStaticMarkup(
+            <PortalBar locale="en" onLocaleChange={noop} right={<button>my bell</button>} />
+        );
+        expect(html.indexOf("<a ")).to.be.lessThan(html.indexOf("my bell"));
+        expect(html.indexOf("my bell")).to.be.lessThan(html.indexOf("<select"));
+        // nothing is added when the app gives none
+        expect(renderToStaticMarkup(<PortalBar locale="en" onLocaleChange={noop} />)).to.not.contain("my bell");
+    });
+
     it("lists the four languages by their names", () => {
         const html = renderToStaticMarkup(<PortalBar locale="en" onLocaleChange={noop} />);
         for (const name of ["English", "한국어", "日本語", "简体中文"]) expect(html).to.contain(name);
@@ -124,5 +134,26 @@ describe("mini-app shell", () => {
         );
         expect(html).to.contain("my wallet menu");
         expect(html).to.not.contain("Connect wallet");
+    });
+
+    it("puts the app's top-bar controls above the header and its header controls beside the wallet", () => {
+        const html = renderToStaticMarkup(
+            <MiniAppShell
+                app={{ name: "Demo" }}
+                locale="en"
+                onLocaleChange={noop}
+                wallet={wallet}
+                topBarRight={<button>my bell</button>}
+                headerRight={<span>my balance</span>}
+                walletSlot={<button>my wallet menu</button>}
+            >
+                <p>the page</p>
+            </MiniAppShell>
+        );
+        const at = (s: string) => html.indexOf(s);
+        expect(at("my bell")).to.be.lessThan(at("<select"));
+        expect(at("<select")).to.be.lessThan(at("<header"));
+        expect(at("<header")).to.be.lessThan(at("my balance"));
+        expect(at("my balance")).to.be.lessThan(at("my wallet menu"));
     });
 });

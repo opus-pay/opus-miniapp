@@ -40,7 +40,12 @@ export type MiniAppShellProps = {
     onSwitchChain?: (target: SwitchTarget) => Promise<boolean>;
     /** The app's pages: a menu in the header on a PC, a tab bar at the bottom on a phone. */
     nav?: readonly NavItem[];
-    /** Extra controls next to the wallet (a notification bell, a help menu). */
+    /**
+     * Small controls of the app in the thin bar at the top, on the right before the language (a notification bell, a
+     * help menu). The bar scrolls away with the page, so keep here what is not needed all the time.
+     */
+    topBarRight?: ReactNode;
+    /** Extra controls next to the wallet in the sticky header (for example a balance). */
     headerRight?: ReactNode;
     /** Shown under the page (links, legal text). */
     footer?: ReactNode;
@@ -52,7 +57,8 @@ export type MiniAppShellProps = {
 /**
  * The frame every OPUS mini-app puts around its pages, top to bottom:
  *
- *  1. the thin bar: the way back to the Portal (top left) and the language (top right), scrolls away;
+ *  1. the thin bar: the way back to the Portal (top left), the app's small controls and the language (top right),
+ *     scrolls away;
  *  2. the wrong-network bar, only when the wallet is on a chain OPUS does not use;
  *  3. the sticky header: the app's logo, its menu (PC), extra controls and the wallet;
  *  4. the page, at most 64 rem wide;
@@ -68,6 +74,7 @@ export function MiniAppShell({
     walletSlot,
     onSwitchChain,
     nav = [],
+    topBarRight,
     headerRight,
     footer,
     Link = Anchor,
@@ -76,7 +83,7 @@ export function MiniAppShell({
     const menuLabel = translate(locale, "nav.menu");
     return (
         <>
-            <PortalBar locale={locale} onLocaleChange={onLocaleChange} portalUrl={portalUrl} />
+            <PortalBar locale={locale} onLocaleChange={onLocaleChange} portalUrl={portalUrl} right={topBarRight} />
             <NetworkWarning
                 connected={wallet.address !== undefined}
                 chainId={wallet.chainId}
