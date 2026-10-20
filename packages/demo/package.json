@@ -2,7 +2,7 @@
     "name": "@opus/miniapp-demo",
     "version": "0.1.0",
     "private": true,
-    "license": "UNLICENSED",
+    "license": "MIT",
     "description": "A page that shows every part of the OPUS mini-app kit, for looking at and for checking a change.",
     "scripts": {
         "dev": "next dev --port 3300",
