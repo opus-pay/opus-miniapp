@@ -2,7 +2,7 @@
     "name": "@opus/miniapp",
     "version": "0.1.0",
     "description": "OPUS mini-app UI kit: the shell, the way back to the Portal, the wallet pill, the network warning and the design tokens every mini-app shares.",
-    "license": "UNLICENSED",
+    "license": "MIT",
     "sideEffects": [
         "*.css"
     ],

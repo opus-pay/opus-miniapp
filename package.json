@@ -1,7 +1,7 @@
 {
     "name": "opus-miniapp-workspace",
     "private": true,
-    "license": "UNLICENSED",
+    "license": "MIT",
     "workspaces": [
         "packages/*"
     ],
