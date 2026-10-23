@@ -1,37 +1,30 @@
-# OPUS 미니앱 표준
+# The OPUS mini app standard
 
-미니앱(WayHand 등)이 지켜야 하는 화면 규격입니다. 키트(`@opus/miniapp`)를 쓰면 1~7번이 자동으로 지켜집니다. 키트를 쓰지 않는 미니앱도 같은 모양이어야 합니다.
+English · [한국어](standard.ko.md)
 
-## 꼭 지킬 것
+The screen rules a mini app built on OPUS (for example WayHand) must follow. If you use the kit (`@opus/miniapp`), rules 1–7 are met automatically. A mini app that does not use the kit must look the same.
 
-1. **왼쪽 위에 포털로 돌아가는 버튼.** 맨 위 얇은 바의 왼쪽에 "‹ ◎ OPUS". 같은 탭에서 포털로 갑니다. 오른쪽 위는 언어 선택. 이 바는 스크롤하면 사라집니다.
-2. **앱 헤더(고정).** 왼쪽에 앱 로고와 이름, 가운데에 메뉴(PC), 오른쪽에 지갑. 휴대폰에서는 메뉴가 아래쪽 탭 바로 내려갑니다.
-3. **잘못된 네트워크 경고.** 지갑이 Polygon(137)이나 Polygon Amoy(80002)가 아니면 헤더 아래에 경고 띠를 보이고 바꾸는 버튼을 줍니다.
-4. **주소 표기.** 어디서나 체크섬(EIP-55) 철자. 줄이면 앞 6자…뒤 4자 (`0xf39F…2266`). 줄인 주소에 마우스를 올리면 전체. 전체를 보여 주는 곳에는 복사 버튼.
-5. **4개 언어.** 영어, 한국어, 일본어, 중국어. 이름은 `English`, `한국어`, `日本語`, `简体中文`. 선택 순서: 주소의 `?lang=` → 저장된 선택(쿠키) → 브라우저 언어(4개 중 첫 번째로 맞는 것, 중국어는 번체도 간체) → 영어. **사용자가 언어 메뉴에서 고른 언어만** 이 사이트의 쿠키에 1년간 저장합니다(`Path=/`, `SameSite=Lax`, https에서는 `Secure`). 주소로 들어온 `?lang=`은 그 방문에만 쓰고 저장하지 않습니다(다른 언어로 건 링크가 본인이 고른 언어를 덮어쓰지 않게). 쿠키가 막혀 있으면 이번 방문 동안만 유지됩니다. 오른쪽 위 언어 선택으로 바꾸면 주소에 이미 있는 `?lang=`도 새 언어로 바꿉니다(주소에 없으면 건드리지 않습니다). 안 그러면 새로고침할 때 주소의 옛 값이 이깁니다.
-6. **반응형.** 휴대폰 360~390px, PC 1280px에서 가로로 넘치지 않을 것. 페이지 폭은 최대 64rem.
-7. **색과 글꼴은 토큰으로.** `tokens.css`의 색(밝은/어두운 화면)만 씁니다. 색을 직접 적지 않습니다 (앱 로고 그림 제외).
-8. **지갑 앱 안에서도 같은 화면.** 웹뷰에서 열릴 때 `window.ethereum`이 있으면 그 지갑을 자동으로 씁니다 (연결 방식 고르기를 보이지 않음). "포털로 돌아가기"는 앱에 메시지를 보냅니다 (키트가 처리).
+## Must
 
-## 포털이 해 줄 것
+1. **A back-to-the-Portal button in the top-left.** In the thin bar at the very top, on the left: "‹ ◎ OPUS". It goes to the Portal in the same tab. On the right: the language select. The bar scrolls away.
+2. **An app header (sticky).** The app logo and name on the left, the menu in the middle (desktop), the wallet on the right. On phones the menu moves to a tab bar at the bottom.
+3. **A wrong-network warning.** If the wallet is not on Polygon (137) or Polygon Amoy (80002), show a warning strip under the header with a switch button.
+4. **Address format.** Checksum (EIP-55) spelling everywhere. Shortened as the first 6 characters … the last 4 (`0xf39F…2266`). The full address on hover. A copy button wherever the full address is shown.
+5. **Four languages.** English, Korean, Japanese, Chinese, named `English`, `한국어`, `日本語`, `简体中文`. Order of choice: `?lang=` in the address → the saved choice (cookie) → the browser language (the first of the four that fits; Chinese for traditional and simplified) → English. **Only a language the user picks in the language menu** is saved, in a cookie of this site for one year (`Path=/`, `SameSite=Lax`, `Secure` on https). A `?lang=` that came in the address is used for that visit only and is not saved (so a link set to another language does not overwrite the user's own choice). If cookies are blocked, the choice lasts for this visit only. Changing the language with the select also changes a `?lang=` already in the address (and leaves the address alone if it has none); otherwise the old value in the address would win on reload.
+6. **Responsive.** No horizontal overflow on a phone (360–390 px) or a desktop (1280 px). The page is at most 64 rem wide.
+7. **Colours and fonts from tokens.** Use only the colours in `tokens.css` (light and dark). Do not write colours by hand (except an app logo's own picture).
+8. **The same screen inside another app.** When opened in a web view or a wallet app's own browser and `window.ethereum` is present, use that wallet automatically (do not show a choice of connection methods). Inside another app, "back to the Portal" becomes a message to that app (the kit handles it).
 
--   미니앱 링크에 `?lang=ko`처럼 지금 언어를 붙여서 엽니다. 키트의 "포털로 돌아가기"와 네트워크 링크도 같은 방식으로 지금 언어를 붙입니다 (`portalLink`).
--   포털의 네트워크 페이지(`/network/`)가 경고 띠의 "네트워크" 링크 대상입니다.
+## What the Portal does
 
-## 하지 않을 것
+-   It opens a mini app's link with the current language added, for example `?lang=ko`. The kit's "back to the Portal" and network links add the current language the same way (`portalLink`).
+-   The Portal's network page (`/network/`) is the target of the "network" link in the warning strip.
 
--   포털의 순위·광고·결제 같은 것을 미니앱 화면에 넣지 않습니다. 포털 바는 돌아가는 길일 뿐입니다.
--   개인키·복구 문구를 다루지 않습니다. 지갑은 지갑 앱이나 브라우저 지갑이 맡습니다.
+## What not to do
 
-## WayHand를 이 표준에 맞출 때 바꿀 것
+-   Do not put the Portal's ranking, ads or payment into a mini app's screen. The Portal bar is only a way back.
+-   Do not handle private keys or recovery phrases. The wallet belongs to a wallet app or the browser's wallet.
 
-| 지금 WayHand (`src/components/frame.tsx`)           | 키트로                                                          |
-| :-------------------------------------------------- | :-------------------------------------------------------------- |
-| 맨 위 얇은 바: 왼쪽 "OPUS" 버튼(새 탭), 오른쪽 언어 | `PortalBar` (같은 탭, 왼쪽 위 "‹ ◎ OPUS", 앱 안에서는 메시지)   |
-| 맨 위 얇은 바 오른쪽: 알림 종, 도움말, 언어         | `MiniAppShell`의 `topBarRight`(종·도움말), 언어는 `PortalBar`가 |
-| 헤더: 로고, 메뉴, 잔고, 지갑                        | `MiniAppShell`의 `app`, `nav`, `headerRight`(잔고 등), `wallet` |
-| 휴대폰 아래 탭 바                                   | `MiniAppShell`이 자동으로                                       |
-| `wallet.tsx`의 주소·연결 표시                       | `WalletPill`, `AddressText`                                     |
-| 네트워크 경고 없음                                  | `NetworkWarning` (켜짐)                                         |
-| `globals.css`의 색                                  | `@import "@opus/miniapp/tokens.css"`                            |
-| `LOCALE_NAMES`의 중국어                             | 이미 `简体中文`                                                 |
+## How to follow this standard
+
+The easiest way is to use the kit ([README](../README.md)). When you build your own screens, check the list above one by one. Pass the app name and logo, the menu and the wallet display to `MiniAppShell` as `app`, `nav`, `headerRight` and `wallet`, and import `@opus/miniapp/tokens.css` for the colours.
